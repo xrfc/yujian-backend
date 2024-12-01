@@ -1,31 +1,26 @@
 package db
 
 import (
-	"log"
-	"sync"
-	"yujian-backend/pkg/model"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+
+	"yujian-backend/pkg/log"
+	"yujian-backend/pkg/model"
 )
 
-var (
-	once sync.Once
-	db   *gorm.DB
-)
-
-func GetDB() *gorm.DB {
-	once.Do(func() {
-		// todo
-		createConnect(model.DBConfig{})
-	})
-	return db
+func InitDB(config model.DBConfig) {
+	db := createConnect(config)
+	UserRepositoryInstance = UserRepository{DB: db}
 }
 
-func createConnect(config model.DBConfig) {
-	var err error
-	db, err = gorm.Open(mysql.Open(config.CreateDsn()), &gorm.Config{})
+func createConnect(config model.DBConfig) *gorm.DB {
+	logger := log.GetLogger()
+	db, err := gorm.Open(mysql.Open(config.CreateDsn()), &gorm.Config{})
 	if err != nil {
-		log.Fatalf("Failed to connect to MySQL: %v", err)
+		logger.Fatalf("failed to connect database: %s", err)
+		return nil
+	} else {
+		logger.Info("Connected to database")
+		return db
 	}
 }
