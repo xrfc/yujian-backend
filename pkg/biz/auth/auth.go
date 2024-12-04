@@ -101,13 +101,15 @@ func UserRegister() gin.HandlerFunc {
 			Name:     registerInfo.UserName,
 			Password: registerInfo.Password, // 注意：在实际应用中，应存储加密后的密码
 		}
-		if err = userRepository.CreateUser(newUser); err != nil {
+		if id, err := userRepository.CreateUser(newUser); err != nil {
 			// 当用户创建失败时，返回错误响应
 			createFailed := model.RegisterResponseDTO{
 				Error: errors.New("failed to create user"),
 			}
 			c.JSON(http.StatusInternalServerError, createFailed)
 			return
+		} else {
+			newUser.Id = id
 		}
 
 		// 注册成功，返回包含令牌和用户信息的成功响应
