@@ -2,6 +2,7 @@ package biz
 
 import (
 	"github.com/gin-gonic/gin"
+	"yujian-backend/pkg/biz/auth"
 
 	"yujian-backend/pkg/biz/user"
 )
@@ -16,5 +17,9 @@ func SetupRouter(r *gin.Engine) {
 		userGroup.PUT("/:id", user.UpdateUser())
 		userGroup.DELETE("/:id", user.DeleteUser())
 	}
+
+	// 登录相关的路由
+	r.POST("/login", auth.UserLogin())
+	r.POST("/register", auth.UserLogin())
 
 }

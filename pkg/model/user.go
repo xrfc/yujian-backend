@@ -21,3 +21,11 @@ func (userDTO *UserDTO) Transfer() *UserDO {
 		Password: userDTO.Password,
 	}
 }
+
+func (userDO *UserDO) Transfer() *UserDTO {
+	return &UserDTO{
+		Id:       userDO.Id,
+		Name:     userDO.Name,
+		Password: userDO.Password,
+	}
+}

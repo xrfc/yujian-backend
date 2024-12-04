@@ -16,17 +16,32 @@ func GetUserRepository() *UserRepository {
 }
 
 // CreateUser 创建用户
-func (r *UserRepository) CreateUser(user *model.UserDO) error {
-	return r.DB.Create(user).Error
+func (r *UserRepository) CreateUser(userDTO *model.UserDTO) (int64, error) {
+	userDO := userDTO.Transfer()
+	if err := r.DB.Create(userDO).Error; err != nil {
+		return 0, err
+	} else {
+		return userDO.Id, nil
+	}
 }
 
 // GetUserById 根据ID获取用户
-func (r *UserRepository) GetUserById(id int64) (*model.UserDO, error) {
+func (r *UserRepository) GetUserById(id int64) (*model.UserDTO, error) {
 	var user model.UserDO
 	if err := r.DB.First(&user, id).Error; err != nil {
 		return nil, err
 	} else {
-		return &user, nil
+		return user.Transfer(), nil
+	}
+}
+
+func (r *UserRepository) GetUserByName(name string) (*model.UserDTO, error) {
+	var userDO model.UserDO
+	if err := r.DB.Where("name IS NOT NULL").
+		Where("name = ?", name).First(&userDO).Error; err != nil {
+		return nil, err
+	} else {
+		return userDO.Transfer(), nil
 	}
 }
 

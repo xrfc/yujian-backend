@@ -19,14 +19,12 @@ func CreateUser() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-
-		userDO := userDTO.Transfer()
-		if err := userRepository.CreateUser(userDO); err != nil {
+		if id, err := userRepository.CreateUser(&userDTO); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
+		} else {
+			c.JSON(http.StatusCreated, gin.H{"message": "User created successfully", "id": id})
 		}
-
-		c.JSON(http.StatusCreated, gin.H{"message": "User created successfully", "id": userDO.Id})
 	}
 }
 
