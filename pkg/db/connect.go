@@ -10,7 +10,9 @@ import (
 
 func InitDB(config model.DBConfig) {
 	db := createConnect(config)
-	UserRepositoryInstance = UserRepository{DB: db}
+	userRepository = UserRepository{DB: db}
+	postRepository = PostRepository{DB: db}
+	bookRepository = BookRepository{DB: db}
 }
 
 func createConnect(config model.DBConfig) *gorm.DB {

@@ -26,8 +26,14 @@ type ServerConfig struct {
 	Port string
 }
 
+type ESConfig struct {
+	Host string
+	Port string
+}
+
 type AppConfig struct {
-	DB     DBConfig
-	Log    LogConfig
-	Server ServerConfig
+	DB     *DBConfig
+	Log    *LogConfig
+	Server *ServerConfig
+	ES     *ESConfig
 }

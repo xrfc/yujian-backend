@@ -13,8 +13,29 @@ var Config model.AppConfig
 // initDBConfig 初始化数据库配置。
 func initDBConfig() {
 	dbConfig := Config.DB
-	// todo[xinhui] 从viper中获取键值对,赋值给dbConfig各个属性
-	// e.g. dbConfig.Host = viper.GetString() ...
+	dbConfig.Host = viper.GetString("db.host")
+	dbConfig.UserName = viper.GetString("db.username")
+	dbConfig.PassWord = viper.GetString("db.password")
+	dbConfig.DBName = viper.GetString("db.dbname")
+	dbConfig.Charset = viper.GetString("db.charset")
+	dbConfig.TimeZone = viper.GetString("db.timezone")
+}
+
+func initLogConfig() {
+	logConfig := Config.Log
+	logConfig.FileName = viper.GetString("log.filename")
+	logConfig.LogLevel = viper.GetString("log.loglevel")
+}
+
+func initServerConfig() {
+	serverConfig := Config.Server
+	serverConfig.Port = viper.GetString("server.port")
+}
+
+func initESConfig() {
+	esConfig := Config.ES
+	esConfig.Host = viper.GetString("es.host")
+	esConfig.Port = viper.GetString("es.port")
 }
 
 func InitConfig() {
@@ -26,10 +47,14 @@ func InitConfig() {
 	// 允许使用环境变量
 	viper.AutomaticEnv()
 
-	initDBConfig()
-
 	// 读取配置文件
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatalf("Error reading config file: %v", err)
 	}
+
+	initDBConfig()
+
+	initLogConfig()
+
+	initServerConfig()
 }

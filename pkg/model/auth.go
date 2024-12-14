@@ -6,10 +6,9 @@ type LoginRequestDTO struct {
 }
 
 type LoginResponseDTO struct {
-	Token string    `json:"token"`
-	User  UserDTO   `json:"user"`
-	Error error     `json:"error"`
-	Code  ErrorCode `json:"code"`
+	BaseResp
+	Token string  `json:"token"`
+	User  UserDTO `json:"user"`
 }
 
 type RegisterRequestDTO struct {
@@ -18,8 +17,7 @@ type RegisterRequestDTO struct {
 }
 
 type RegisterResponseDTO struct {
-	Token string    `json:"token"`
-	User  UserDTO   `json:"user"`
-	Error error     `json:"error"`
-	Code  ErrorCode `json:"code"`
+	BaseResp
+	Token string  `json:"token"`
+	User  UserDTO `json:"user"`
 }
