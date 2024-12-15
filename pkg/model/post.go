@@ -14,6 +14,18 @@ type PostDTO struct {
 	Comments  []*PostCommentDTO `json:"comments"`
 }
 
+// TransformToDO 将PostDTO转换为PostDO
+func (p *PostDTO) TransformToDO() *PostDO {
+	return &PostDO{
+		Id:         p.Id,
+		AuthorId:   p.Author.Id,
+		AuthorName: p.Author.Name,
+		Title:      p.Title,
+		ContentId:  p.ContentId,
+		EditTime:   p.EditTime,
+	}
+}
+
 // PostDO 帖子DO
 type PostDO struct {
 	Id         int64     `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
@@ -40,16 +52,36 @@ func (p *PostDO) TransformToDTO(userDTO *UserDTO, comments []*PostCommentDTO) *P
 	}
 }
 
-// TransformToDO 将PostDTO转换为PostDO
-func (p *PostDTO) TransformToDO() *PostDO {
-	return &PostDO{
-		Id:         p.Id,
-		AuthorId:   p.Author.Id,
-		AuthorName: p.Author.Name,
-		Title:      p.Title,
-		ContentId:  p.ContentId,
-		EditTime:   p.EditTime,
-	}
+// PostEsModel 帖子ES模型
+type PostEsModel struct {
+	Id      string  `json:"id"`
+	Title   string  `json:"title"`
+	Content string  `json:"content"`
+	Score   float64 `json:"score"`
+}
+
+func (p *PostEsModel) GetID() string {
+	return p.Id
+}
+
+func (p *PostEsModel) SetScore(score float64) {
+	p.Score = score
+}
+
+func (p *PostEsModel) GetScore() float64 {
+	return p.Score
+}
+
+func (p *PostEsModel) GetIndexName() string {
+	return "post"
+}
+
+func (p *PostEsModel) GetContent() string {
+	return p.Content
+}
+
+func (p *PostEsModel) GetTitle() string {
+	return p.Title
 }
 
 // PostCommentDTO 帖子评论DTO

@@ -1,6 +1,7 @@
 package es
 
 import (
+	"yujian-backend/pkg/config"
 	"yujian-backend/pkg/log"
 
 	"github.com/elastic/go-elasticsearch/v8"
@@ -9,17 +10,18 @@ import (
 var esClient *elasticsearch.Client
 
 func InitESClient() {
+	esConfig := config.Config.ES
 	cfg := elasticsearch.Config{
-		Addresses: []string{"http://localhost:9200"},
+		Addresses: esConfig.Addresses,
+		Username:  esConfig.Username,
+		Password:  esConfig.Password,
 	}
 
-	esClient, err := elasticsearch.NewClient(cfg)
+	client, err := elasticsearch.NewClient(cfg)
 	if err != nil {
 		log.GetLogger().Error("创建ES客户端失败: %v", err)
 		return
 	}
 
-	postESInstance = &PostES{
-		client: esClient,
-	}
+	esClient = client
 }

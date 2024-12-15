@@ -27,8 +27,9 @@ type ServerConfig struct {
 }
 
 type ESConfig struct {
-	Host string
-	Port string
+	Addresses []string
+	Username  string
+	Password  string
 }
 
 type AppConfig struct {
