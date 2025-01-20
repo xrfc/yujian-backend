@@ -8,7 +8,7 @@ import (
 type PostDTO struct {
 	Id        int64             `json:"id"`
 	Author    *UserDTO          `json:"author"`
-	标题     string            `json:"title"`
+	Title     string            `json:"title"`
 	ContentId string            `json:"content_id"`
 	EditTime  time.Time         `json:"edit_time"`
 	Comments  []*PostCommentDTO `json:"comments"`
@@ -33,7 +33,7 @@ type PostDO struct {
 	Id         int64     `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
 	AuthorId   int64     `gorm:"column:author_id" json:"author_id"`
 	AuthorName string    `gorm:"column:author_name" json:"author_name"`
-	标题      string    `gorm:"column:title" json:"title"`
+	Title      string    `gorm:"column:title" json:"title"`
 	ContentId  string    `gorm:"column:content_id" json:"content_id"`
 	EditTime   time.Time `gorm:"column:edit_time" json:"edit_time"`
 	LikeUserIds    string    `gorm:"column:like_user_ids" json:"like_user_ids"`
@@ -141,7 +141,7 @@ func (p *PostCommentDTO) TransformToDO() *PostCommentDO {
 
 // CreatePostRequestDTO 创建帖子请求DTO
 type CreatePostRequestDTO struct {
-	标题   string `json:"title"`
+	Title   string `json:"title"`
 	Content string `json:"content"`
 	UserId  int64  `json:"user_id"`
 }
