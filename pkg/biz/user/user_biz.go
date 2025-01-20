@@ -10,44 +10,6 @@ import (
 	"yujian-backend/pkg/model"
 )
 
-// RegisterUser 用户注册的处理函数
-func RegisterUser() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		userRepository := db.GetUserRepository()
-		var registerRequest struct {
-			Name            string `json:"name" binding:"required"`
-			Email           string `json:"email" binding:"required,email"`
-			Password        string `json:"password" binding:"required"`
-			ConfirmPassword string `json:"confirm_password" binding:"required"`
-		}
-		if err := c.ShouldBindJSON(&registerRequest); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		} //绑定和是否为请求体
-		if registerRequest.Password != registerRequest.ConfirmPassword {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "password and confirm password do not match"})
-			return
-		} //密码与确认密码是否相同
-		userDTO := model.UserDTO{
-			Email:    registerRequest.Email,
-			Name:     registerRequest.Name,
-			Password: registerRequest.Password,
-		}
-		// 创建用户和获取 ID
-		id, err := userRepository.CreateUser(&userDTO)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create user"})
-			return
-		}
-		// 返回成功响应
-		c.JSON(http.StatusCreated, gin.H{
-			"message": "User registered successfully",
-			"id":      id, //学姐要的响应数据里没有这个，但我觉得貌似应该需要这个（？）
-		})
-	}
-}
-
-
 
 // CreateUser 创建用户的处理函数
 func CreateUser() gin.HandlerFunc {
