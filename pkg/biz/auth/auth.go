@@ -60,6 +60,7 @@ func UserLogin() gin.HandlerFunc {
 	}
 }
 
+
 // UserRegister 返回一个处理用户注册的中间件函数
 // 该函数接收用户注册信息，并在成功注册后返回一个令牌
 func UserRegister() gin.HandlerFunc {
@@ -96,6 +97,15 @@ func UserRegister() gin.HandlerFunc {
 			return
 		}
 
+		//检验密码与确认密码是否相同
+		if registerInfo.Password != registerInfo.ConfirmPassword {
+			passwordNotMatch := model.RegisterResponseDTO{
+				Error: errors.New("password and confirm password do not match"),
+			}
+			c.JSON(http.StatusOK, passwordNotMatch)
+			return
+		}
+
 		// 创建新用户
 		newUser := &model.UserDTO{
 			Name:     registerInfo.UserName,
@@ -121,3 +131,4 @@ func UserRegister() gin.HandlerFunc {
 		c.JSON(http.StatusOK, okResp)
 	}
 }
+
