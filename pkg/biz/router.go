@@ -20,6 +20,6 @@ func SetupRouter(r *gin.Engine) {
 
 	// 登录相关的路由
 	r.POST("/api/user/login", auth.UserLogin())       //登录
-	r.POST("/api/user/register", auth.RegisterUser()) //注册
+	r.POST("/api/user/register", auth.UserRegister()) //注册
 
 }
