@@ -11,8 +11,8 @@ type PostDTO struct {
 	Title        string            `json:"title"`         // 帖子标题
 	Content      string            `json:"content"`       // 帖子内容
 	Category     string            `json:"category"`      // 帖子分类
-	LikeCount    int               `json:"like_count"`    // 点赞数
-	DislikeCount int               `json:"dislike_count"` // 踩数
+	LikeUserIds     []int64        `json:"like_user_ids"`    // 使用用户ID记录点赞
+	DislikeUserIds  []int64        `json:"dislike_user_ids"` // 使用用户ID记录点踩
 	ViewCount    int               `json:"view_count"`    // 阅读数
 	EditTime     time.Time         `json:"edit_time"`     // 编辑时间
 	Comments     []*PostCommentDTO `json:"comments"`      // 评论列表
@@ -25,10 +25,10 @@ type PostDO struct {
 	Title        string    `gorm:"column:title" json:"title"`                    // 帖子标题
 	Content      string    `gorm:"column:content" json:"content"`                // 帖子内容
 	Category     string    `gorm:"column:category" json:"category"`              // 帖子分类
-	LikeCount    int       `gorm:"column:like_count" json:"like_count"`          // 点赞数
-	DislikeCount int       `gorm:"column:dislike_count" json:"dislike_count"`    // 踩数
 	ViewCount    int       `gorm:"column:view_count" json:"view_count"`          // 阅读数
 	EditTime     time.Time `gorm:"column:edit_time" json:"edit_time"`            // 编辑时间
+	LikeUserIds     []int64   `gorm:"column:like_user_ids;type:bigint[]" json:"like_user_ids"`    // 使用 []int64 存储
+	DislikeUserIds  []int64   `gorm:"column:dislike_user_ids;type:bigint[]" json:"dislike_user_ids"`
 }
 
 // TableName 指定PostDO对应的数据库表名
