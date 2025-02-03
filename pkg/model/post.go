@@ -11,11 +11,11 @@ type PostDTO struct {
 	Title        string            `json:"title"`         // 帖子标题
 	Content      string            `json:"content"`       // 帖子内容
 	Category     string            `json:"category"`      // 帖子分类
-	LikeUserIds     []int64        `json:"like_user_ids"`    // 使用用户ID记录点赞
-	DislikeUserIds  []int64        `json:"dislike_user_ids"` // 使用用户ID记录点踩
 	ViewCount    int               `json:"view_count"`    // 阅读数
 	EditTime     time.Time         `json:"edit_time"`     // 编辑时间
 	Comments     []*PostCommentDTO `json:"comments"`      // 评论列表
+	LikeUserIds     []int64        `json:"like_user_ids"`    // 使用用户ID记录点赞
+	DislikeUserIds  []int64        `json:"dislike_user_ids"` // 使用用户ID记录点踩
 }
 
 // PostDO 帖子DO（数据库对象）
