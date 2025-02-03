@@ -4,66 +4,59 @@ import (
 	"time"
 )
 
-// PostDTO 帖子DTO（数据传输对象）
+// PostDTO 帖子数据传输对象
 type PostDTO struct {
-	Id           int64             `json:"id"`            // 帖子ID
-	Author       *UserDTO          `json:"author"`        // 发布者信息
-	Title        string            `json:"title"`         // 帖子标题
-	Content      string            `json:"content"`       // 帖子内容
-	Category     string            `json:"category"`      // 帖子分类
-	ViewCount    int               `json:"view_count"`    // 阅读数
-	EditTime     time.Time         `json:"edit_time"`     // 编辑时间
-	Comments     []*PostCommentDTO `json:"comments"`      // 评论列表
-	LikeUserIds     []int64        `json:"like_user_ids"`    // 使用用户ID记录点赞
-	DislikeUserIds  []int64        `json:"dislike_user_ids"` // 使用用户ID记录点踩
+	Id              int64             `json:"id"`
+	Author          *UserDTO          `json:"author"`
+	Title           string            `json:"title"`
+	Content         string            `json:"content"`
+	Category        string            `json:"category"`
+	EditTime        time.Time         `json:"edit_time"`
+	Comments        []*PostCommentDTO `json:"comments"`
+	LikeUserIds     []int64           `json:"like_user_ids"`    // 使用用户ID记录点赞
+	DislikeUserIds  []int64           `json:"dislike_user_ids"` 
 }
 
-// PostDO 帖子DO（数据库对象）
+// PostDO 帖子数据库对象
 type PostDO struct {
-	Id           int64     `gorm:"column:id;primaryKey;autoIncrement" json:"id"` // 帖子ID
-	AuthorId     int64     `gorm:"column:author_id" json:"author_id"`            // 发布者ID
-	Title        string    `gorm:"column:title" json:"title"`                    // 帖子标题
-	Content      string    `gorm:"column:content" json:"content"`                // 帖子内容
-	Category     string    `gorm:"column:category" json:"category"`              // 帖子分类
-	ViewCount    int       `gorm:"column:view_count" json:"view_count"`          // 阅读数
-	EditTime     time.Time `gorm:"column:edit_time" json:"edit_time"`            // 编辑时间
-	LikeUserIds     []int64   `gorm:"column:like_user_ids;type:bigint[]" json:"like_user_ids"`    // 使用 []int64 存储
+	Id              int64     `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
+	AuthorId        int64     `gorm:"column:author_id" json:"author_id"`
+	Title           string    `gorm:"column:title" json:"title"`
+	Content         string    `gorm:"column:content" json:"content"`
+	Category        string    `gorm:"column:category" json:"category"`
+	EditTime        time.Time `gorm:"column:edit_time" json:"edit_time"`
+	LikeUserIds     []int64   `gorm:"column:like_user_ids;type:bigint[]" json:"like_user_ids"`    // 直接使用 []int64 存储
 	DislikeUserIds  []int64   `gorm:"column:dislike_user_ids;type:bigint[]" json:"dislike_user_ids"`
 }
 
-// TableName 指定PostDO对应的数据库表名
-func (PostDO) TableName() string {
-	return "post"
-}
+// ------------------------- 转换方法 -------------------------
 
 // TransformToDO 将PostDTO转换为PostDO
 func (p *PostDTO) TransformToDO() *PostDO {
 	return &PostDO{
-		Id:           p.Id,
-		AuthorId:     p.Author.Id,
-		Title:        p.Title,
-		Content:      p.Content,
-		Category:     p.Category,
-		LikeCount:    p.LikeCount,
-		DislikeCount: p.DislikeCount,
-		ViewCount:    p.ViewCount,
-		EditTime:     p.EditTime,
+		Id:             p.Id,
+		AuthorId:       p.Author.Id,
+		Title:          p.Title,
+		Content:        p.Content,
+		Category:       p.Category,
+		EditTime:       p.EditTime,
+		LikeUserIds:    p.LikeUserIds,    
+		DislikeUserIds: p.DislikeUserIds, 
 	}
 }
 
 // TransformToDTO 将PostDO转换为PostDTO
 func (p *PostDO) TransformToDTO(author *UserDTO, comments []*PostCommentDTO) *PostDTO {
 	return &PostDTO{
-		Id:           p.Id,
-		Author:       author,
-		Title:        p.Title,
-		Content:      p.Content,
-		Category:     p.Category,
-		LikeCount:    p.LikeCount,
-		DislikeCount: p.DislikeCount,
-		ViewCount:    p.ViewCount,
-		EditTime:     p.EditTime,
-		Comments:     comments,
+		Id:             p.Id,
+		Author:         author,
+		Title:          p.Title,
+		Content:        p.Content,
+		Category:       p.Category,
+		EditTime:       p.EditTime,
+		Comments:       comments,
+		LikeUserIds:    p.LikeUserIds,    
+		DislikeUserIds: p.DislikeUserIds, 
 	}
 }
 
