@@ -33,3 +33,11 @@ func (userDO *UserDO) Transfer() *UserDTO {
 		Password: userDO.Password,
 	}
 }
+
+
+// 修改密码的请求结构体
+type ChangePasswordRequest struct {
+	OldPassword     string `json:"OldPassword"`     // 旧密码
+	NewPassword     string `json:"NewPassword"`     // 新密码
+	ConfirmPassword string `json:"ConfirmPassword"` // 确认新密码
+}
