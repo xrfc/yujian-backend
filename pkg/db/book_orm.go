@@ -89,30 +89,31 @@ func (r *BookRepository) DeleteBookComment(id int64) error {
 	return r.DB.Delete(&model.BookCommentDO{}, id).Error
 }
 
+// SearchBooks 搜索书
+func (r *BookRepository) SearchBooks(keyword, category string, page, pageSize int) ([]model.BookInfoDTO, error) {
+	var books []model.BookInfoDO
 
-// GetBookDetail 图书详情获取接口
-func GetBookDetail(c *gin.Context) {
-	//获取id
-	bookId, err := strconv.ParseInt(c.Param("bookId"), 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "invalid book ID",
-		})
-		return
+	// 构建查询条件
+	query := r.DB.Model(&model.BookInfoDO{})
+	if keyword != "" {
+		query = query.Where("name LIKE ? OR author LIKE ? OR isbn LIKE ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%")
+	}
+	if category != "" {
+		query = query.Where("category = ?", category)
 	}
 
-	bookRepository := db.GetBookRepository()
-	// 查询详情
-	bookDTO, err := bookRepository.GetBookById(bookId)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"error": "book not found",
-		})
-		return
+	// 分页查询
+	offset := (page - 1) * pageSize
+	if err := query.Offset(offset).Limit(pageSize).Find(&books).Error; err != nil {
+		return nil, err
 	}
-	// 返回
-	c.JSON(http.StatusOK, gin.H{
-		"data": bookDTO,
-	})
+
+	// 转换为 DTO
+	var bookDTOs []model.BookInfoDTO
+	for _, book := range books {
+		bookDTOs = append(bookDTOs, *book.Transfer())
+	}
+
+	return bookDTOs, nil
 }
 
