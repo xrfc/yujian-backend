@@ -10,16 +10,22 @@ import (
 // SetupRouter 设置路由
 func SetupRouter(r *gin.Engine) {
 	// 用户相关的路由
-	userGroup := r.Group("/users")
+	userGroup := r.Group("/api/users")
 	{
-		userGroup.POST("/", user.CreateUser())
-		userGroup.GET("/:id", user.GetUserById())
-		userGroup.PUT("/:id", user.UpdateUser())
-		userGroup.DELETE("/:id", user.DeleteUser())
+		userGroup.GET("/info", user.GetUserById())                   //信息获取
+		userGroup.PUT("/update", user.UpdateUser())                  //更新
+		userGroup.PUT("/password/change/:id", user.PasswordChange()) //修改密码
+		userGroup.DELETE("/delete/:id", user.DeleteUser())           //删除用户
 	}
 
 	// 登录相关的路由
-	r.POST("/login", auth.UserLogin())
-	r.POST("/register", auth.UserLogin())
+	r.POST("/api/user/login", auth.UserLogin())       //登录
+	r.POST("/api/user/register", auth.UserRegister()) //注册
+
+	bookGroup := r.Group("/api/books")
+	{
+		bookGroup.GET("/search", book.SearchBooks)    // 图书搜索
+		bookGroup.GET("/:bookId", book.GetBookDetail) // 图书详情获取
+	}
 
 }

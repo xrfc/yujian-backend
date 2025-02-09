@@ -6,47 +6,60 @@ import (
 
 // BookInfoDTO 书信息DTO
 type BookInfoDTO struct {
-	Id     int64   `json:"id"`
-	Name   string  `json:"name"`
-	Author string  `json:"author"`
-	ISBN   string  `json:"ISBN"`
-	Score  float64 `json:"score"`
-	Intro  string  `json:"intro"`
-}
+	Id          int64   `json:"id"`
+	Name        string  `json:"name"`
+	Author      string  `json:"author"`
+	CoverImage  string  `json:"cover_image"`  //封面
+	Publisher   string  `json:"publisher"`    //出版社
+	PublishYear int     `json:"publish_year"` //出版年份
+	ISBN        string  `json:"ISBN"`
+	Score       float64 `json:"score"`
+	Intro       string  `json:"intro"`
+} //
 
 // BookInfoDO 书信息数据库对象
 type BookInfoDO struct {
-	Id     int64   `gorm:"column:id;primaryKey" json:"id"`
-	Name   string  `gorm:"column:name" json:"name"`
-	Author string  `gorm:"column:author" json:"author"`
-	ISBN   string  `gorm:"column:isbn" json:"ISBN"`
-	Score  float64 `gorm:"column:score" json:"score"`
-	Intro  string  `gorm:"column:intro" json:"intro"`
-}
+	Id          int64   `gorm:"column:id;primaryKey" json:"id"`
+	Name        string  `gorm:"column:name" json:"name"`
+	Author      string  `gorm:"column:author" json:"author"`
+	CoverImage  string  `json:"cover_image"`  //封面
+	Publisher   string  `json:"publisher"`    //出版社
+	PublishYear int     `json:"publish_year"` //出版年份
+	ISBN        string  `gorm:"column:isbn" json:"ISBN"`
+	Score       float64 `gorm:"column:score" json:"score"`
+	Intro       string  `gorm:"column:intro" json:"intro"`
+} //
 
 // TransformToDTO 将BookInfoDO转换为BookInfoDTO
 func (bookInfoDO *BookInfoDO) Transfer() *BookInfoDTO {
 	return &BookInfoDTO{
-		Id:     bookInfoDO.Id,
-		Name:   bookInfoDO.Name,
-		Author: bookInfoDO.Author,
-		ISBN:   bookInfoDO.ISBN,
-		Score:  bookInfoDO.Score,
-		Intro:  bookInfoDO.Intro,
+		Id:          bookInfoDO.Id,
+		Name:        bookInfoDO.Name,
+		Author:      bookInfoDO.Author,
+		CoverImage:  bookInfoDO.CoverImage,
+		Publisher:   bookInfoDO.Publisher,
+		PublishYear: bookInfoDO.PublishYear,
+		ISBN:        bookInfoDO.ISBN,
+		Score:       bookInfoDO.Score,
+		Intro:       bookInfoDO.Intro,
 	}
 }
 
 // TransformToDO 将BookInfoDTO转换为BookInfoDO
 func (bookInfoDTO *BookInfoDTO) TransformToDO() *BookInfoDO {
 	return &BookInfoDO{
-		Id:     bookInfoDTO.Id,
-		Name:   bookInfoDTO.Name,
-		Author: bookInfoDTO.Author,
-		ISBN:   bookInfoDTO.ISBN,
-		Score:  bookInfoDTO.Score,
-		Intro:  bookInfoDTO.Intro,
+		Id:          bookInfoDTO.Id,
+		Name:        bookInfoDTO.Name,
+		Author:      bookInfoDTO.Author,
+		CoverImage:  bookInfoDTO.CoverImage,
+		Publisher:   bookInfoDTO.Publisher,
+		PublishYear: bookInfoDTO.PublishYear,
+		ISBN:        bookInfoDTO.ISBN,
+		Score:       bookInfoDTO.Score,
+		Intro:       bookInfoDTO.Intro,
 	}
 }
+
 
 // BookCommentDTO 书评DTO
 type BookCommentDTO struct {
@@ -94,4 +107,18 @@ func (bookCommentDO *BookCommentDO) TransformToDTO() *BookCommentDTO {
 		LikeUserIds:    utils.MustParseJSONString[[]int64](bookCommentDO.LikeUserIds),
 		DislikeUserIds: utils.MustParseJSONString[[]int64](bookCommentDO.DislikeUserIds),
 	}
+}
+
+
+// 搜索请求结构体
+type BookSearchRequest struct {
+	Keyword  string `json:"Keyword"`  //关键词
+	Category string `json:"Category"` //分类
+	Page     int    `json:"Page"`     //页码
+	PageSize int    `json:"PageSize"` //页码数量？？
+}
+
+// 搜索返回请求结构体
+type SearchResponse struct {
+	Books []BookInfoDTO `json:"books"`
 }

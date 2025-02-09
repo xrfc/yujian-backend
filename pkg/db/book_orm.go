@@ -88,3 +88,32 @@ func (r *BookRepository) UpdateBookComment(comment *model.BookCommentDO) error {
 func (r *BookRepository) DeleteBookComment(id int64) error {
 	return r.DB.Delete(&model.BookCommentDO{}, id).Error
 }
+
+// SearchBooks 搜索书
+func (r *BookRepository) SearchBooks(keyword, category string, page, pageSize int) ([]model.BookInfoDTO, error) {
+	var books []model.BookInfoDO
+
+	// 构建查询条件
+	query := r.DB.Model(&model.BookInfoDO{})
+	if keyword != "" {
+		query = query.Where("name LIKE ? OR author LIKE ? OR isbn LIKE ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%")
+	}
+	if category != "" {
+		query = query.Where("category = ?", category)
+	}
+
+	// 分页查询
+	offset := (page - 1) * pageSize
+	if err := query.Offset(offset).Limit(pageSize).Find(&books).Error; err != nil {
+		return nil, err
+	}
+
+	// 转换为 DTO
+	var bookDTOs []model.BookInfoDTO
+	for _, book := range books {
+		bookDTOs = append(bookDTOs, *book.Transfer())
+	}
+
+	return bookDTOs, nil
+}
+

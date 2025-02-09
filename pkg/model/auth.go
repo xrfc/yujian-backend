@@ -12,8 +12,10 @@ type LoginResponseDTO struct {
 }
 
 type RegisterRequestDTO struct {
-	UserName string `json:"user_name"`
-	Password string `json:"password"`
+	UserName        string `json:"user_name"`
+	Email           string `json:"email"`
+	Password        string `json:"password"`
+	ConfirmPassword string `json:"confirm_password"`
 }
 
 type RegisterResponseDTO struct {
