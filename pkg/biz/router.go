@@ -22,4 +22,10 @@ func SetupRouter(r *gin.Engine) {
 	r.POST("/api/user/login", auth.UserLogin())       //登录
 	r.POST("/api/user/register", auth.UserRegister()) //注册
 
+	bookGroup := r.Group("/api/books")
+	{
+		bookGroup.GET("/search", book.SearchBooks)    // 图书搜索
+		bookGroup.GET("/:bookId", book.GetBookDetail) // 图书详情获取
+	}
+
 }
