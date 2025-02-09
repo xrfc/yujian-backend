@@ -101,6 +101,7 @@ func DeleteUser() gin.HandlerFunc {
 }
 
 
+
 // PasswordChange 更新密码的处理函数
 func PasswordChange() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -110,23 +111,23 @@ func PasswordChange() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
 			return
-		} //id不对
-
-		var requestBody struct {
-			OldPassword     string `json:"OldPassword"`
-			NewPassword     string `json:"NewPassword"`
-			ConfirmPassword string `json:"ConfirmPassword"`
 		}
+
+		var requestBody model.ChangePasswordRequest
 		if err := c.ShouldBindJSON(&requestBody); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 			return
-		} //请求体不对
-		var user model.UserDO
-		if err := userRepository.DB.First(&user, userId).Error; err != nil {
+		}
+
+		//使用UserRepository提供的GetUserById查询
+		userDTO, err := userRepository.GetUserById(userId)
+		if err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Failed to find user"})
 			return
 		} //id不存在
 
+		//转换
+		user := userDTO.Transfer()
 		// 校验旧密码是否正确
 		if user.Password != requestBody.OldPassword {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Incorrect password"})
@@ -143,8 +144,12 @@ func PasswordChange() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update password"})
 			return
 		}
-		// 返回成功响应
-		c.JSON(http.StatusOK, gin.H{"message": "Success to update password"})
+		// 返回成功响应，修改
+		c.JSON(http.StatusOK, model.BaseResp{
+			Error:  nil,
+			Code:   0, // 这个不确定，搜了一下感觉是
+			ErrMsg: "Success to update password",
+		})
 	}
 }
 
